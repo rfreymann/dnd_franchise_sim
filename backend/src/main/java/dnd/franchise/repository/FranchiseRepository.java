@@ -1,6 +1,6 @@
-package com.dnd.franchise.repository;
+package dnd.franchise.repository;
 
-import com.dnd.franchise.model.Franchise;
+import dnd.franchise.model.Franchise;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FranchiseRepository extends JpaRepository<Franchise, Long> {}

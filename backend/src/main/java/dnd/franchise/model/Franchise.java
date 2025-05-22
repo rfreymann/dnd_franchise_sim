@@ -1,9 +1,12 @@
-package com.dnd.franchise.model;
+package dnd.franchise.model;
 
 import jakarta.persistence.*;
 import java.util.List;
 
+import lombok.*;
+
 @Entity
+@Data
 public class Franchise {
 
     @Id

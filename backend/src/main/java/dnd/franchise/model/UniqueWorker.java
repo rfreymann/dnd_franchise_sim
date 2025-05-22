@@ -1,8 +1,10 @@
-package com.dnd.franchise.model;
+package dnd.franchise.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Data
 public class UniqueWorker {
 
     @Id

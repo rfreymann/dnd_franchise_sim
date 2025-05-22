@@ -1,7 +1,7 @@
-package com.dnd.franchise.repository;
+package dnd.franchise.repository;
 
-import com.dnd.franchise.model.Franchise;
-import com.dnd.franchise.model.UniqueWorker;
+import dnd.franchise.model.Franchise;
+import dnd.franchise.model.UniqueWorker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
