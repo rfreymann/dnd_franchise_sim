@@ -1,7 +1,7 @@
-package com.dnd.franchise.controller;
+package dnd.franchise.controller;
 
-import com.dnd.franchise.model.Franchise;
-import com.dnd.franchise.repository.FranchiseRepository;
+import dnd.franchise.model.Franchise;
+import dnd.franchise.repository.FranchiseRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
