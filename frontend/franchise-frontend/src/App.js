@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, AuthContext } from './auth/AuthContext';
+import LandingPage from './components/LandingPage';
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
+import Dashboard from './components/Dashboard';
+import CreateFranchisePage from './components/CreateFranchisePage';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function PrivateRoute({ children }) {
+  const { isAuthenticated } = React.useContext(AuthContext);
+  return isAuthenticated ? children : <Navigate to="/login" />;
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/create-franchise"
+            element={
+              <PrivateRoute>
+                <CreateFranchisePage />
+              </PrivateRoute>
+            }
+          />
+          {/* Redirect any unknown route to landing */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}

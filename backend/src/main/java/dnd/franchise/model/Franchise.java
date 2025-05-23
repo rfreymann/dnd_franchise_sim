@@ -14,6 +14,10 @@ public class Franchise {
     private Long id;
 
     private String name;
+    @ManyToOne 
+    User owner;
+
+
     private int funds;
     private int propertyValue;
 
