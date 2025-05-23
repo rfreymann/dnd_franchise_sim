@@ -13,21 +13,44 @@ import {
   VStack,
   Alert,
   AlertIcon,
+  useToast,
   useColorModeValue
 } from '@chakra-ui/react';
+
+import ReCAPTCHA from 'react-google-recaptcha';
+const SITE_KEY = "6Ld2F0crAAAAAFHyxj9d05GYNJ2M7qYD_a4KTedm";
 
 export default function RegisterForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
   const [error, setError] = useState(null);
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
+    if (!recaptchaToken) {
+      toast({
+        title: "Bitte reCAPTCHA bestätigen.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
-      await register(username, password);
+      await register(username, password, recaptchaToken);
+      toast({
+        title: "Registrierung erfolgreich.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
       navigate('/login');
     } catch (err) {
       const msg = err.response?.data?.message || 'Registration failed';
@@ -67,6 +90,11 @@ export default function RegisterForm() {
                 {error}
               </Alert>
             )}
+
+            <ReCAPTCHA
+              sitekey={SITE_KEY}
+              onChange={(token) => setRecaptchaToken(token)}
+            />
 
             <Button type="submit" colorScheme="green" width="full">
               Register

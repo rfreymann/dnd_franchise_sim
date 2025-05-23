@@ -14,29 +14,31 @@ import { AuthContext } from '../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const { getFranchises, logout } = useContext(AuthContext);
+  const { fetchFranchises, logout } = useContext(AuthContext);
   const [franchises, setFranchises] = useState([]);
   const toast = useToast();
   const navigate = useNavigate();
+  const { isAuthenticated } = useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchFranchises = async () => {
-      try {
-        const data = await getFranchises();
-        setFranchises(data);
-      } catch (error) {
-        toast({
-          title: 'Error loading franchises.',
-          description: error.message,
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    };
+useEffect(() => {
+  const loadFranchises = async () => {
+    try {
+      const data = await fetchFranchises(); // das ist nun korrekt das aus dem Context
+      setFranchises(data);
+    } catch (error) {
+      toast({
+        title: 'Error loading franchises.',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
-    fetchFranchises();
-  }, [getFranchises, toast]);
+  loadFranchises();
+}, [fetchFranchises, toast]);
+
 
   return (
     <Box maxW="6xl" mx="auto" mt={10} p={6}>
@@ -52,7 +54,7 @@ const Dashboard = () => {
         </HStack>
       </HStack>
 
-      {franchises.length === 0 ? (
+      {(!franchises || franchises.length === 0) ? (
         <Text>No franchises found.</Text>
       ) : (
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
