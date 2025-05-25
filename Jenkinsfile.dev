@@ -41,9 +41,9 @@ EOF
 
     stage('Build & Deploy DEV') {
       steps {
-        sh 'docker-compose -p franchise -f docker-compose.dev.yml down --remove-orphans'
-        sh 'docker-compose -p franchise -f docker-compose.dev.yml build --no-cache'
-        sh 'docker-compose -p franchise -f docker-compose.dev.yml up -d'
+        sh 'docker-compose -p dev_franchise -f docker-compose.dev.yml down --remove-orphans'
+        sh 'docker-compose -p dev_franchise -f docker-compose.dev.yml build --no-cache'
+        sh 'docker-compose -p dev_franchise -f docker-compose.dev.yml up -d'
       }
     }
   }
