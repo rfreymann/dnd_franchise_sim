@@ -9,7 +9,7 @@ pipeline {
     JWT_SECRET = credentials('jwt-secret')
     RECAPTCHA_SECRET = credentials('recaptcha-secret')
     RECAPTCHA_SITE_KEY = credentials('recaptcha-site-key')
-    API_URL = 'http://backend-dev:9012'
+    API_URL = '/api'
   }
 
   stages {
@@ -41,9 +41,9 @@ EOF
 
     stage('Build & Deploy PROD') {
       steps {
-        sh 'docker-compose -f docker-compose.dev.yml down'
-        sh 'docker-compose -f docker-compose.dev.yml build'
-        sh 'docker-compose -f docker-compose.dev.yml up -d'
+        sh 'docker-compose -f docker-compose.prod.yml down'
+        sh 'docker-compose -f docker-compose.prod.yml build'
+        sh 'docker-compose -f docker-compose.prod.yml up -d --remove-orphans'
       }
     }
   }
