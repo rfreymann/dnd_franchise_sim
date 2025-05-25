@@ -6,6 +6,11 @@ import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import Dashboard from './components/Dashboard';
 import CreateFranchisePage from './components/CreateFranchisePage';
+import EditFranchisePage from './components/EditFranchisePage';
+import FranchiseDetailPage from './components/FranchiseDetailPage';
+
+
+
 
 function PrivateRoute({ children }) {
   const { isAuthenticated } = React.useContext(AuthContext);
@@ -33,6 +38,22 @@ export default function App() {
             element={
               <PrivateRoute>
                 <CreateFranchisePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/franchise/:id/edit"
+            element={
+              <PrivateRoute>
+                <EditFranchisePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/franchise/:id"
+            element={
+              <PrivateRoute>
+                <FranchiseDetailPage />
               </PrivateRoute>
             }
           />

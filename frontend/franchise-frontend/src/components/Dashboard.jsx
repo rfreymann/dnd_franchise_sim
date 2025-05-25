@@ -19,25 +19,27 @@ const Dashboard = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
+  useEffect(() => {
+    if (!isAuthenticated) return;
 
-useEffect(() => {
-  const loadFranchises = async () => {
-    try {
-      const data = await fetchFranchises(); // das ist nun korrekt das aus dem Context
-      setFranchises(data);
-    } catch (error) {
-      toast({
-        title: 'Error loading franchises.',
-        description: error.message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
+    const loadFranchises = async () => {
+      try {
+        const data = await fetchFranchises();
+        setFranchises(data);
+      } catch (error) {
+        toast({
+          title: 'Error loading franchises.',
+          description: error.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    };
 
-  loadFranchises();
-}, [fetchFranchises, toast]);
+    loadFranchises();
+  }, [isAuthenticated, fetchFranchises, toast]);
+
 
 
   return (
@@ -59,13 +61,17 @@ useEffect(() => {
       ) : (
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
           {franchises.map((franchise) => (
+
             <Box
               key={franchise.id}
               p={4}
               borderWidth={1}
               borderRadius="lg"
               shadow="md"
+              _hover={{ bg: 'gray.50', cursor: 'pointer' }}
+              onClick={() => navigate(`/franchise/${franchise.id}`)}
             >
+
               <Heading size="md">{franchise.name}</Heading>
               <Text>Funds: {franchise.funds}</Text>
               <Text>Property Value: {franchise.propertyValue}</Text>

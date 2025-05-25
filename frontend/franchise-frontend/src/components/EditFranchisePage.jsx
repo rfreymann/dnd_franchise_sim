@@ -1,53 +1,46 @@
-// src/pages/CreateFranchisePage.jsx
-import React, { useState, useContext } from 'react';
+// src/pages/EditFranchisePage.jsx
+import React, { useContext, useEffect, useState } from 'react';
 import {
-  Box,
-  Heading,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  VStack,
-  useToast,
+  Box, Heading, FormControl, FormLabel, Input, Button, VStack, useToast, Flex,
 } from '@chakra-ui/react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-
-
-const CreateFranchisePage = () => {
-  const { createFranchise } = useContext(AuthContext);
-  const [formData, setFormData] = useState({
-    name: '',
-    funds: '',
-    propertyValue: '',
-    unskilledWorkers: '',
-    lowskilledWorkers: '',
-    highskilledWorkers: '',
-    costUnskilledWorkers: '',
-    costLowskilledWorkers: '',
-    costHighskilledWorkers: '',
-    revenueModifier: '',
-    upkeepModifier: '',
-  });
-
-  const toast = useToast();
+const EditFranchisePage = () => {
+  const { franchises, fetchFranchises } = useContext(AuthContext);
+  const { id } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
+
+  const franchise = franchises.find((f) => f.id.toString() === id);
+  const [formData, setFormData] = useState(franchise || {});
+
+  const editableFields = [
+    "name", "funds", "propertyValue",
+    "unskilledWorkers", "lowskilledWorkers", "highskilledWorkers",
+    "costUnskilledWorkers", "costLowskilledWorkers", "costHighskilledWorkers",
+    "revenueModifier", "upkeepModifier"
+  ];
+
+  useEffect(() => {
+    if (!franchise) {
+      fetchFranchises();
+    } else {
+      setFormData(franchise);
+    }
+  }, [franchise, fetchFranchises]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createFranchise({
-        ...formData,
+      await axios.put(`/api/franchise/${id}`, {
+        name: formData.name,
         funds: parseInt(formData.funds),
         propertyValue: parseInt(formData.propertyValue),
         unskilledWorkers: parseInt(formData.unskilledWorkers),
@@ -61,14 +54,15 @@ const CreateFranchisePage = () => {
       });
 
       toast({
-        title: 'Franchise created.',
+        title: 'Franchise aktualisiert.',
         status: 'success',
         duration: 3000,
         isClosable: true,
       });
+      navigate('/dashboard');
     } catch (error) {
       toast({
-        title: 'Error creating franchise.',
+        title: 'Fehler beim Speichern.',
         description: error.message,
         status: 'error',
         duration: 3000,
@@ -78,28 +72,35 @@ const CreateFranchisePage = () => {
   };
 
   return (
-    <Box maxW="md" mx="auto" mt={10} p={6} borderWidth={1} borderRadius="lg">
-      <Heading mb={6}>Create Franchise</Heading>
+    <Box w="full" maxW="800px" mx="auto" mt={10} p={6} borderWidth={1} borderRadius="lg">
+
+        
+<Flex mb={6} justify="space-between" align="center">
+  <Heading mb={0}>Franchise bearbeiten</Heading>
+  <Button
+    colorScheme="gray"
+    onClick={() => navigate(`/franchise/${id}`)}
+  >
+    Zurück zur Detailseite
+  </Button>
+</Flex>
+
       <form onSubmit={handleSubmit}>
         <VStack spacing={4}>
-          {Object.keys(formData).map((key) => (
+          {editableFields.map((key) => (
             <FormControl key={key} isRequired>
               <FormLabel htmlFor={key}>{key}</FormLabel>
               <Input
                 id={key}
                 name={key}
-                value={formData[key]}
+                value={formData[key] || ''}
                 onChange={handleChange}
                 type={key === 'name' ? 'text' : 'number'}
               />
             </FormControl>
           ))}
-
           <Button colorScheme="blue" type="submit" width="full">
-            Create
-          </Button>
-          <Button colorScheme="gray" onClick={() => navigate('/dashboard')} width="full">
-            Back to Dashboard
+            Änderungen speichern
           </Button>
 
         </VStack>
@@ -108,5 +109,4 @@ const CreateFranchisePage = () => {
   );
 };
 
-export default CreateFranchisePage;
- 
+export default EditFranchisePage;

@@ -11,11 +11,14 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const interceptor = axios.interceptors.request.use(config => {
-      if (token) config.headers.Authorization = `Bearer ${token}`;
+      const jwt = localStorage.getItem('jwt'); // sicherste Quelle
+      if (jwt) config.headers.Authorization = `Bearer ${jwt}`;
       return config;
     });
     return () => axios.interceptors.request.eject(interceptor);
-  }, [token]);
+  }, []);
+
+
 
   const login = async (username, password) => {
     const response = await axios.post('/api/auth/login', { username, password });
@@ -25,13 +28,13 @@ export const AuthProvider = ({ children }) => {
     return jwt;
   };
 
-const register = async (username, password, recaptchaToken) => {
-  await axios.post('/api/auth/register', {
-    username,
-    password,
-    recaptchaToken
-  });
-};
+  const register = async (username, password, recaptchaToken) => {
+    await axios.post('/api/auth/register', {
+      username,
+      password,
+      recaptchaToken
+    });
+  };
 
 
   const logout = () => {
@@ -41,27 +44,32 @@ const register = async (username, password, recaptchaToken) => {
     setFranchises([]);
   };
 
-const fetchFranchises = useCallback(async () => {
-  const response = await axios.get('/api/franchise');
-  setFranchises(response.data);
-  return response.data;
-}, []);
+  const fetchFranchises = useCallback(async () => {
+    if (!token) return;
+    const response = await axios.get('/api/franchise');
+    setFranchises(response.data);
+    return response.data;
+  }, [token]);
+
+  useEffect(() => {
+    if (token) fetchFranchises();
+  }, [token, fetchFranchises]);
 
 
-const createFranchise = async (data) => {
-  try {
-    const response = await axios.post('/api/franchise', data);
-    setFranchises(prev => [...prev, response.data]);
-  } catch (err) {
-    console.error("Fehler beim Erstellen eines Franchises:", err);
-    throw err; // damit UI reagieren kann
-  }
-};
+  const createFranchise = async (data) => {
+    try {
+      const response = await axios.post('/api/franchise', data);
+      setFranchises(prev => [...prev, response.data]);
+    } catch (err) {
+      console.error("Fehler beim Erstellen eines Franchises:", err);
+      throw err; // damit UI reagieren kann
+    }
+  };
 
 
-useEffect(() => {
-  if (token) fetchFranchises();
-}, [token]);
+  // useEffect(() => {
+  //   if (token) fetchFranchises();
+  // }, [token]);
 
   const value = {
     token,
