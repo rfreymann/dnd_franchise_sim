@@ -1,8 +1,6 @@
 
 package dnd.franchise.controller;
 
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -17,6 +15,7 @@ import dnd.franchise.dto.RegisterRequest;
 import dnd.franchise.dto.JwtResponse;
 import dnd.franchise.service.AuthService;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 
 import lombok.*;
 
@@ -26,21 +25,35 @@ import lombok.*;
 public class AuthController {
   private final AuthService authService;
 
+  @Value("${recaptcha.secret}")
+  private String recaptchaSecret;
+
   private boolean verifyRecaptcha(String token) {
-    String secret = "6Ld2F0crAAAAAE6U2softWy9G6_68yXgAfeDdPen";
+    
     String url = "https://www.google.com/recaptcha/api/siteverify";
 
     RestTemplate restTemplate = new RestTemplate();
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-    params.add("secret", secret);
+    params.add("secret", recaptchaSecret);
     params.add("response", token);
 
     ResponseEntity<Map> response = restTemplate.postForEntity(url, params, Map.class);
-    return (Boolean) response.getBody().get("success");
+
+    Map<String, Object> body = response.getBody();
+    System.out.println("reCAPTCHA verification response: " + body);
+
+    if (body == null || !Boolean.TRUE.equals(body.get("success"))) {
+      System.out.println("reCAPTCHA failed: " + body.get("error-codes"));
+      return false;
+    }
+
+    return true;
   }
 
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody RegisterRequest dto) {
+    System.out.println("received token: " + dto.recaptchaToken());
+
     if (!verifyRecaptcha(dto.recaptchaToken())) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid reCAPTCHA");
     }

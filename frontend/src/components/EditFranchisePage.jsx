@@ -5,7 +5,7 @@ import {
 } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthContext';
-import axios from 'axios';
+import api from '../api';
 
 const EditFranchisePage = () => {
   const { franchises, fetchFranchises } = useContext(AuthContext);
@@ -39,7 +39,7 @@ const EditFranchisePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`/api/franchise/${id}`, {
+      await api.put(`/franchise/${id}`, {
         name: formData.name,
         funds: parseInt(formData.funds),
         propertyValue: parseInt(formData.propertyValue),
@@ -59,7 +59,7 @@ const EditFranchisePage = () => {
         duration: 3000,
         isClosable: true,
       });
-      navigate('/dashboard');
+      navigate(`/franchise/${id}`);
     } catch (error) {
       toast({
         title: 'Fehler beim Speichern.',

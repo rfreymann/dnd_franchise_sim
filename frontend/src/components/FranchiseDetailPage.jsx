@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
-import axios from 'axios';
+import api from '../api';
 import { AuthContext } from '../auth/AuthContext';
 
 const FranchiseDetailPage = () => {
@@ -29,17 +29,13 @@ const FranchiseDetailPage = () => {
     name: '', costPerMonth: 0, marketingBonus: 0, restructuringBonus: 0, accountingBonus: 0
   });
 
-  const authAxios = axios.create({
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
   const loadFranchise = async () => {
-    const response = await axios.get(`/api/franchise/${id}`);
+    const response = await api.get(`/franchise/${id}`);
     setFranchise(response.data);
   };
   const loadLog = async () => {
     try {
-      const response = await axios.get(`/api/franchise/${id}/log`);
+      const response = await api.get(`/franchise/${id}/log`);
       setLogEntries(response.data);
     } catch (err) {
       toast({ title: 'Log konnte nicht geladen werden', status: 'error' });
@@ -50,7 +46,7 @@ const FranchiseDetailPage = () => {
 
   const loadBaseValues = async () => {
     try {
-      const res = await axios.get(`/api/franchise/${id}/base-values`);
+      const res = await api.get(`/franchise/${id}/base-values`);
       setBaseValues(res.data);
     } catch {
       toast({ title: 'Base-Werte konnten nicht geladen werden', status: 'error' });
@@ -83,7 +79,7 @@ const FranchiseDetailPage = () => {
     };
 
     try {
-      const response = await axios.post(`/api/franchise/${id}/full-simulation`, payload);
+      const response = await api.post(`/franchise/${id}/full-simulation`, payload);
       setSimulationResult(response.data);
 
       toast({ title: 'Simulation abgeschlossen.', status: 'success' });
@@ -97,13 +93,13 @@ const FranchiseDetailPage = () => {
   const submitWorker = async () => {
     try {
       if (editingWorker) {
-        await authAxios.put(`/api/franchise/${id}/unique-workers/${editingWorker.id}`, newWorker);
+        await api.put(`/franchise/${id}/unique-workers/${editingWorker.id}`, newWorker);
       } else {
-        await authAxios.post(`/api/franchise/${id}/unique-workers`, newWorker);
+        await api.post(`/franchise/${id}/unique-workers`, newWorker);
       }
       setNewWorker({ name: '', costPerMonth: 0, marketingBonus: 0, restructuringBonus: 0, accountingBonus: 0 });
       setEditingWorker(null);
-      const updated = await authAxios.get(`/api/franchise/${id}`);
+      const updated = await api.get(`/franchise/${id}`);
       setFranchise(updated.data);
       loadBaseValues();
     } catch (err) {
@@ -113,8 +109,8 @@ const FranchiseDetailPage = () => {
 
   const deleteWorker = async (workerId) => {
     try {
-      await authAxios.delete(`/api/franchise/${id}/unique-workers/${workerId}`);
-      const updated = await authAxios.get(`/api/franchise/${id}`);
+      await api.delete(`/franchise/${id}/unique-workers/${workerId}`);
+      const updated = await api.get(`/franchise/${id}`);
       setFranchise(updated.data);
       loadBaseValues();
     } catch (err) {

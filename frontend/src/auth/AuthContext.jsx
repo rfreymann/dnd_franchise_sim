@@ -1,6 +1,7 @@
 // src/auth/AuthContext.jsx
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import api from '../api';
 
 export const AuthContext = createContext();
 
@@ -8,17 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('jwt') || null);
   const [user, setUser] = useState(null);
   const [franchises, setFranchises] = useState([]);
-
-  useEffect(() => {
-    const interceptor = axios.interceptors.request.use(config => {
-      const jwt = localStorage.getItem('jwt'); // sicherste Quelle
-      if (jwt) config.headers.Authorization = `Bearer ${jwt}`;
-      return config;
-    });
-    return () => axios.interceptors.request.eject(interceptor);
-  }, []);
-
-
 
   const login = async (username, password) => {
     const response = await axios.post('/api/auth/login', { username, password });
@@ -33,8 +23,13 @@ export const AuthProvider = ({ children }) => {
       username,
       password,
       recaptchaToken
+    }, {
+      headers: {
+        Authorization: undefined
+      }
     });
   };
+
 
 
   const logout = () => {
@@ -45,20 +40,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const fetchFranchises = useCallback(async () => {
-    if (!token) return;
-    const response = await axios.get('/api/franchise');
+    const response = await api.get('/franchise');
     setFranchises(response.data);
     return response.data;
-  }, [token]);
-
-  useEffect(() => {
-    if (token) fetchFranchises();
-  }, [token, fetchFranchises]);
+  }, []);
 
 
   const createFranchise = async (data) => {
     try {
-      const response = await axios.post('/api/franchise', data);
+      const response = await api.post('/franchise', data);
       setFranchises(prev => [...prev, response.data]);
     } catch (err) {
       console.error("Fehler beim Erstellen eines Franchises:", err);

@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { AuthContext } from '../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import api from '../api';
 
 const Dashboard = () => {
   const { fetchFranchises, logout } = useContext(AuthContext);

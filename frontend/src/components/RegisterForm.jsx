@@ -18,7 +18,8 @@ import {
 } from '@chakra-ui/react';
 
 import ReCAPTCHA from 'react-google-recaptcha';
-const SITE_KEY = "6Ld2F0crAAAAAFHyxj9d05GYNJ2M7qYD_a4KTedm";
+const SITE_KEY = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
+
 
 export default function RegisterForm() {
   const [username, setUsername] = useState('');
@@ -93,8 +94,12 @@ export default function RegisterForm() {
 
             <ReCAPTCHA
               sitekey={SITE_KEY}
-              onChange={(token) => setRecaptchaToken(token)}
+              onChange={(token) => {
+                console.log("New token: ", token);
+                setRecaptchaToken(token);
+              }}
             />
+
 
             <Button type="submit" colorScheme="green" width="full">
               Register
