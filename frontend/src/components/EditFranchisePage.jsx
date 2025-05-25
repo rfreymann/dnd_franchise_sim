@@ -54,7 +54,7 @@ const EditFranchisePage = () => {
       });
 
       toast({
-        title: 'Franchise aktualisiert.',
+        title: 'Franchise updated.',
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -62,7 +62,7 @@ const EditFranchisePage = () => {
       navigate(`/franchise/${id}`);
     } catch (error) {
       toast({
-        title: 'Fehler beim Speichern.',
+        title: 'Error Saving.',
         description: error.message,
         status: 'error',
         duration: 3000,
@@ -76,12 +76,12 @@ const EditFranchisePage = () => {
 
         
 <Flex mb={6} justify="space-between" align="center">
-  <Heading mb={0}>Franchise bearbeiten</Heading>
+  <Heading mb={0}>Edit Franchise</Heading>
   <Button
     colorScheme="gray"
     onClick={() => navigate(`/franchise/${id}`)}
   >
-    Zurück zur Detailseite
+    Back to Details
   </Button>
 </Flex>
 
@@ -100,7 +100,7 @@ const EditFranchisePage = () => {
             </FormControl>
           ))}
           <Button colorScheme="blue" type="submit" width="full">
-            Änderungen speichern
+            Save Changes
           </Button>
 
         </VStack>

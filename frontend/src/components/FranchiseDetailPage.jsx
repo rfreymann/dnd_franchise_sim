@@ -38,7 +38,7 @@ const FranchiseDetailPage = () => {
       const response = await api.get(`/franchise/${id}/log`);
       setLogEntries(response.data);
     } catch (err) {
-      toast({ title: 'Log konnte nicht geladen werden', status: 'error' });
+      toast({ title: 'Log not loaded', status: 'error' });
     }
   };
 
@@ -49,7 +49,7 @@ const FranchiseDetailPage = () => {
       const res = await api.get(`/franchise/${id}/base-values`);
       setBaseValues(res.data);
     } catch {
-      toast({ title: 'Base-Werte konnten nicht geladen werden', status: 'error' });
+      toast({ title: 'Base Values not loaded', status: 'error' });
     }
   };
 
@@ -82,11 +82,11 @@ const FranchiseDetailPage = () => {
       const response = await api.post(`/franchise/${id}/full-simulation`, payload);
       setSimulationResult(response.data);
 
-      toast({ title: 'Simulation abgeschlossen.', status: 'success' });
+      toast({ title: 'Simulation Completed.', status: 'success' });
       await loadFranchise();
-      console.log('Simulationsergebnis:', response.data);
+      console.log('Simulation Result:', response.data);
     } catch (err) {
-      toast({ title: 'Simulation fehlgeschlagen.', status: 'error' });
+      toast({ title: 'Simulation failed.', status: 'error' });
     }
   };
 
@@ -103,7 +103,7 @@ const FranchiseDetailPage = () => {
       setFranchise(updated.data);
       loadBaseValues();
     } catch (err) {
-      toast({ title: 'Speichern fehlgeschlagen.', status: 'error' });
+      toast({ title: 'Error Saving.', status: 'error' });
     }
   };
 
@@ -114,7 +114,7 @@ const FranchiseDetailPage = () => {
       setFranchise(updated.data);
       loadBaseValues();
     } catch (err) {
-      toast({ title: 'Löschen fehlgeschlagen.', status: 'error' });
+      toast({ title: 'Error Deleting.', status: 'error' });
     }
   };
   const downloadLogAsCSV = (logEntries) => {
@@ -199,7 +199,7 @@ const FranchiseDetailPage = () => {
       <Flex mb={4} justify="space-between" align="center">
         <Heading>Franchise: {franchise.name}</Heading>
         <Button colorScheme="gray" onClick={() => navigate("/dashboard")}>
-          Zurück zum Dashboard
+          Back to Dashboard
         </Button>
       </Flex>
 
@@ -217,7 +217,7 @@ const FranchiseDetailPage = () => {
       </SimpleGrid>
       {baseValues && (
         <Text mb={2}>
-          📊 <b>Basiswerte:</b> Revenue {baseValues.baseRevenue} \(+ {franchise.revenueModifier}\), Upkeep {baseValues.baseUpkeep} \(+ {franchise.upkeepModifier}\)
+          <b>Base Values:</b> Revenue {baseValues.baseRevenue} (+ {franchise.revenueModifier}), Upkeep {baseValues.baseUpkeep} (+ {franchise.upkeepModifier})
         </Text>
       )}
 
@@ -237,31 +237,31 @@ const FranchiseDetailPage = () => {
             ))}
           </Select>
         ))}
-        <Button colorScheme="green" onClick={handleSimulate}>Monat abrechnen</Button>
+        <Button colorScheme="green" onClick={handleSimulate}>Simulate Month</Button>
       </HStack>
 
       {simulationResult && (
         <Box p={4} borderWidth={1} borderRadius="md" mb={4}>
-          <Heading size="sm" mb={2}>Simulationsergebnisse</Heading>
+          <Heading size="sm" mb={2}>Simulation Results</Heading>
 
           {simulationResult.marketing && (
             <Text>
-              <b>Marketing:</b> {simulationResult.marketing.successes} Erfolg(e),
-              DC: {simulationResult.marketing.dc}, neuer RevenueModifier: {simulationResult.marketing.revenueMod}
+              <b>Marketing:</b> {simulationResult.marketing.successes} Sucess(es),
+              DC: {simulationResult.marketing.dc}, New Revenue Modifier: {simulationResult.marketing.revenueMod}
             </Text>
           )}
 
           {simulationResult.restructuring && (
             <Text>
-              <b>Restrukturierung:</b> {simulationResult.restructuring.successes} Erfolg(e),
-              DC: {simulationResult.restructuring.dc}, neuer UpkeepModifier: {simulationResult.restructuring.upkeepMod}
+              <b>Restructuring:</b> {simulationResult.restructuring.successes} Sucess(es),
+              DC: {simulationResult.restructuring.dc}, New Upkeep Modifier: {simulationResult.restructuring.upkeepMod}
             </Text>
           )}
 
           {simulationResult.bookkeeping && (
             <Text>
-              <b>Monatsabschluss:</b> {simulationResult.bookkeeping.description} (Roll: {simulationResult.bookkeeping.finalRoll}),
-              Gewinn: {simulationResult.bookkeeping.finalProfit}, base revenue: {simulationResult.bookkeeping.baseRevenue}, multiplier {simulationResult.bookkeeping.multiplier}, base upkeep {simulationResult.bookkeeping.baseUpkeep}
+              <b>Monthly Result:</b> {simulationResult.bookkeeping.description} (Roll: {simulationResult.bookkeeping.finalRoll}),
+              Profit: {simulationResult.bookkeeping.finalProfit}, Base Revenue: {simulationResult.bookkeeping.baseRevenue}, Multiplier {simulationResult.bookkeeping.multiplier}, Base Upkeep {simulationResult.bookkeeping.baseUpkeep}
             </Text>
           )}
         </Box>
@@ -269,17 +269,17 @@ const FranchiseDetailPage = () => {
 
 
       <Button colorScheme="blue" mb={4} onClick={() => navigate(`/franchise/${franchise.id}/edit`)}>
-        Franchise bearbeiten
+        Edit Franchise
       </Button>
       <Button colorScheme="gray" onClick={downloadFranchiseAsXml} mb={6}>
-        Franchise als XML exportieren
+        Export as XML
       </Button>
 
       <Heading size="md" mb={2}>Unique Workers</Heading>
       <Table variant="simple" mb={4}>
         <Thead>
           <Tr>
-            <Th>Name</Th><Th>Kosten</Th><Th>Marketing</Th><Th>Restructuring</Th><Th>Accounting</Th><Th>Aktionen</Th>
+            <Th>Name</Th><Th>Costs</Th><Th>Marketing</Th><Th>Restructuring</Th><Th>Accounting</Th><Th>Actions</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -299,7 +299,7 @@ const FranchiseDetailPage = () => {
         </Tbody>
       </Table>
 
-      <Heading size="sm" mb={2}>{editingWorker ? 'Worker bearbeiten' : 'Neuer Worker'}</Heading>
+      <Heading size="sm" mb={2}>{editingWorker ? 'Edit Worker' : 'New Worker'}</Heading>
       <HStack spacing={2} mb={4} wrap="wrap">
         {['name', 'costPerMonth', 'marketingBonus', 'restructuringBonus', 'accountingBonus'].map(key => (
           <Input
@@ -313,28 +313,28 @@ const FranchiseDetailPage = () => {
           />
         ))}
         <Button colorScheme="green" onClick={submitWorker}>
-          {editingWorker ? 'Speichern' : 'Hinzufügen'}
+          {editingWorker ? 'Save' : 'Add'}
         </Button>
       </HStack>
       <Button size="sm" onClick={() => downloadLogAsCSV(logEntries)} mb={2}>
-        Journal als CSV exportieren
+        Export Log as CSV
       </Button>
 
       {logEntries.length > 0 && (
         <Box mt={10}>
-          <Heading size="md" mb={3}>📘 Abrechnungsverlauf</Heading>
+          <Heading size="md" mb={3}>Log</Heading>
           <Table variant="striped" size="sm">
             <Thead>
               <Tr>
-                <Th>Datum</Th>
+                <Th>Date</Th>
                 <Th>Roll</Th>
                 <Th>Mod</Th>
                 <Th>Final</Th>
-                <Th>Gewinn</Th>
-                <Th>Beschreibung</Th>
+                <Th>Profit</Th>
+                <Th>Description</Th>
                 <Th>Marketing</Th>
-                <Th>Restrukturierung</Th>
-                <Th>Buchhaltung</Th>
+                <Th>Restructuring</Th>
+                <Th>Bookkeeping</Th>
               </Tr>
             </Thead>
             <Tbody>

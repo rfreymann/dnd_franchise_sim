@@ -23,10 +23,10 @@ export default function LandingPage() {
     >
       <Container maxW="2xl" centerContent textAlign="center">
         <Heading size="2xl" color="blue.500" mb={6}>
-          Willkommen bei DnD Franchise Manager
+          DnD Franchise Manager
         </Heading>
         <Text fontSize="lg" mb={8} color={useColorModeValue('gray.700', 'gray.200')}>
-          Baue dein Fantasy-Franchise auf, manage Ressourcen, entsende einzigartige Charaktere und schreibe deine eigene Wirtschaftsgeschichte!
+          Simulate and manage your Dungeons & Dragons franchise with ease (and rather simple complexity).
         </Text>
         <Stack direction={{ base: 'column', sm: 'row' }} spacing={4} justify="center">
           <Button
@@ -46,7 +46,7 @@ export default function LandingPage() {
             size="lg"
             px={8}
           >
-            Registrieren
+            Register
           </Button>
         </Stack>
       </Container>

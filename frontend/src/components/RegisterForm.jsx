@@ -47,7 +47,7 @@ export default function RegisterForm() {
     try {
       await register(username, password, recaptchaToken);
       toast({
-        title: "Registrierung erfolgreich.",
+        title: "Register succesful.",
         status: "success",
         duration: 3000,
         isClosable: true,
