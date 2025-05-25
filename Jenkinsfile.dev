@@ -9,7 +9,7 @@ pipeline {
     JWT_SECRET = credentials('jwt-secret')
     RECAPTCHA_SECRET = credentials('recaptcha-secret')
     RECAPTCHA_SITE_KEY = credentials('recaptcha-site-key')
-    API_URL = 'http://backend:9012'
+    API_URL = 'http://backend-dev:9012'
   }
 
   stages {
