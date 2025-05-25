@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     SPRING_PROFILES_ACTIVE = 'prod'
-    DB_URL = 'jdbc:postgresql://postgres:5432/franchise'
+    DB_URL = 'jdbc:postgresql://postgres-dev:5432/franchise'
     DB_USER = 'franchiseuser'
     DB_PASS = credentials('db-pass')
     JWT_SECRET = credentials('jwt-secret')
@@ -43,7 +43,7 @@ EOF
       steps {
         sh 'docker-compose -f docker-compose.dev.yml down'
         sh 'docker-compose -f docker-compose.dev.yml build'
-        sh 'docker-compose -f docker-compose.dev.yml up -d --remove-orphans'
+        sh 'docker-compose -f docker-compose.dev.yml up -d'
       }
     }
   }
