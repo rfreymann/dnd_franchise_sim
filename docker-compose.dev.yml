@@ -17,7 +17,7 @@ services:
     ports:
       - "9012:8080"
     depends_on:
-      - postgres
+      - postgres-dev
 
   frontend-dev:
     build:
